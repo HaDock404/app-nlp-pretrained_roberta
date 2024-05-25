@@ -49,26 +49,25 @@ function display_cloudWords() {
 function predict_sentiment() {
     var selectElement = document.getElementById("options");
     var selectedValue = selectElement.value;
+    var encodedText = encodeURIComponent(selectedValue);
 
-    fetch('http://localhost:8080/predict_sentiment', {
+    fetch('http://localhost:8080/predict_sentiment?text=' + encodedText, {
         method: 'POST',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Accept': 'application/json'
         },
-        body: JSON.stringify({ text: selectedValue })
+        body: ''
     })
     .then(response => response.json())
     .then(data => {
-        let sentiment;
         if (data[0].label == 'LABEL_1') {
-            sentiment = "POSITIF";
+            sentiment = "POSITIF"
         } else {
-            sentiment = "NEGATIF";
+            sentiment = "NEGATIF"
         }
-        let score = (data[0].score * 100).toFixed(1);
+        score = (data[0].score*100).toFixed(1)
         var resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `<div>Le sentiment du tweet est <strong class="sentiment">${sentiment}</strong> avec une certitude de <strong class="sentiment">${score}%</strong></div>`;
+        resultDiv.innerHTML = '<div>Le sentiment du tweet est <strong class="sentiment">' +sentiment+ '</strong> a <strong class="sentiment">'+score+'%</strong> de certitude</div>';
         console.log(data[0].label, data[0].score);
     })
     .catch(error => {
@@ -76,5 +75,4 @@ function predict_sentiment() {
     });
 }
 
-
-console.log("yea")
+console.log("ok")
